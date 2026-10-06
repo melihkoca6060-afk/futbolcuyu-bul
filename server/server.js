@@ -654,28 +654,22 @@ io.on("connection", socket => {
 // SERVER
 // =====================================================
 
-server.listen(
-    PORT,
-    "0.0.0.0",
-    () => {
+// =====================================================
+// SERVER
+// =====================================================
 
-        console.log("");
-        console.log(
-            "================================"
-        );
-        console.log(
-            "⚽ FUTBOLCUYU BUL SERVER"
-        );
-        console.log(
-            "================================"
-        );
-        console.log(
-            `🌐 http://localhost:${PORT}`
-        );
-        console.log("");
+const PORT = process.env.PORT || 3000;
 
-    }
-);
+server.listen(PORT, "0.0.0.0", () => {
+
+    console.log("");
+    console.log("================================");
+    console.log("⚽ FUTBOLCUYU BUL SERVER");
+    console.log("================================");
+    console.log(`🌐 http://localhost:${PORT}`);
+    console.log("");
+
+});
 
 const PORT = process.env.PORT || 3000;
 
