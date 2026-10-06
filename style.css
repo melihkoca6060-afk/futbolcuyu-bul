@@ -1,0 +1,309 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #0b1220;
+    color: white;
+    min-height: 100vh;
+}
+
+#game {
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* ÜST BAR */
+
+.topbar {
+    height: 70px;
+    padding: 0 25px;
+    background: #111b2e;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #26334d;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.scores {
+    display: flex;
+    gap: 20px;
+}
+
+.scores span {
+    background: #1b2942;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* EKRANLAR */
+
+.screen {
+    display: none;
+    padding: 50px 25px;
+    text-align: center;
+}
+
+.screen.active {
+    display: block;
+}
+
+.screen h1 {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.screen h2 {
+    font-size: 30px;
+    margin-bottom: 15px;
+}
+
+.screen p {
+    color: #aeb9cc;
+    margin-bottom: 25px;
+}
+
+/* BUTONLAR */
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 14px 24px;
+    margin: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #247cff;
+    color: white;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+button.secondary {
+    background: #27344d;
+}
+
+/* KURALLAR */
+
+.rules-box {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 25px;
+    background: #111b2e;
+    border-radius: 15px;
+    text-align: left;
+}
+
+.rules-box p {
+    margin: 14px 0;
+    color: white;
+}
+
+/* ARAMA */
+
+input,
+textarea {
+    width: 100%;
+    max-width: 650px;
+    background: #111b2e;
+    border: 1px solid #34435e;
+    color: white;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 16px;
+    outline: none;
+    margin-bottom: 20px;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #247cff;
+}
+
+/* FUTBOLCU LİSTESİ */
+
+.player-list {
+    max-width: 700px;
+    margin: 10px auto 25px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.player-card {
+    background: #111b2e;
+    border: 2px solid transparent;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.player-card:hover {
+    background: #17243b;
+}
+
+.player-card.selected {
+    border-color: #247cff;
+    background: #172f55;
+}
+
+.player-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.player-info {
+    font-size: 13px;
+    color: #8f9db4;
+}
+
+/* SEÇİLEN FUTBOLCU */
+
+#selectedPlayer {
+    min-height: 30px;
+    margin-bottom: 10px;
+    color: #4d9aff;
+    font-weight: bold;
+}
+
+/* SORU EKRANI */
+
+.question-header {
+    max-width: 700px;
+    margin: auto auto 25px;
+    display: flex;
+    justify-content: space-between;
+    background: #111b2e;
+    padding: 15px 20px;
+    border-radius: 12px;
+}
+
+#timer {
+    color: #ffcc00;
+    font-weight: bold;
+}
+
+.answer-buttons {
+    margin: 10px 0 20px;
+}
+
+#yesButton {
+    background: #18a558;
+}
+
+#noButton {
+    background: #d83a3a;
+}
+
+.hint {
+    background: #c78a00;
+}
+
+/* TAHMİN */
+
+.guess-area {
+    max-width: 700px;
+    margin: 35px auto 0;
+    padding-top: 25px;
+    border-top: 1px solid #26334d;
+}
+
+/* SONUÇ */
+
+.stats {
+    max-width: 600px;
+    margin: 25px auto;
+    background: #111b2e;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: left;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #26334d;
+}
+
+.stat-row:last-child {
+    border-bottom: none;
+}
+
+.big-score {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* MOBİL */
+
+@media (max-width: 700px) {
+
+    .topbar {
+        height: auto;
+        padding: 15px;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .scores {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .screen {
+        padding: 35px 15px;
+    }
+
+    .screen h1 {
+        font-size: 32px;
+    }
+
+    .screen h2 {
+        font-size: 25px;
+    }
+
+    .player-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 420px) {
+
+    .player-list {
+        grid-template-columns: 1fr;
+    }
+
+    button {
+        width: calc(100% - 16px);
+    }
+}
