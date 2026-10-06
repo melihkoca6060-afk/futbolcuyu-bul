@@ -21,6 +21,8 @@ let timeLeft = 30;
 let player1Score = 0;
 let player2Score = 0;
 
+let answerLocked = false;
+
 
 // =====================================================
 // EKRAN
@@ -34,7 +36,8 @@ function showScreen(id) {
             screen.classList.remove("active");
         });
 
-    const screen = document.getElementById(id);
+    const screen =
+        document.getElementById(id);
 
     if (screen) {
         screen.classList.add("active");
@@ -346,6 +349,15 @@ socket.on("gameStarted", data => {
     document.getElementById("lastAnswer").innerHTML =
         "";
 
+    document.getElementById("questionInput").value =
+        "";
+
+    document.getElementById("questionInput").disabled =
+        false;
+
+    document.getElementById("askQuestion").disabled =
+        false;
+
     showScreen("questionScreen");
 
     startTimer();
@@ -449,13 +461,24 @@ document
 
 
 // =====================================================
-// P1 — SORU GELDİ
+// P1 — YENİ SORU GELDİ
 // =====================================================
 
 socket.on("questionReceived", data => {
 
+    // Yeni soru geldiği için cevap kilidini aç
+    answerLocked = false;
+
     document.getElementById("askedQuestion").textContent =
         data.question;
+
+    // ÖNEMLİ:
+    // Önceki soruda kilitlenen butonları tekrar aç
+    document.getElementById("yesButton").disabled =
+        false;
+
+    document.getElementById("noButton").disabled =
+        false;
 
     showScreen("answerScreen");
 
@@ -490,16 +513,23 @@ document
 
 function sendAnswer(answer) {
 
-    socket.emit("answerQuestion", {
-        roomCode,
-        answer
-    });
+    // Aynı soruya iki kere cevap verilmesini engelle
+    if (answerLocked) {
+        return;
+    }
+
+    answerLocked = true;
 
     document.getElementById("yesButton").disabled =
         true;
 
     document.getElementById("noButton").disabled =
         true;
+
+    socket.emit("answerQuestion", {
+        roomCode,
+        answer
+    });
 
 }
 
@@ -517,13 +547,14 @@ socket.on("questionAnswered", data => {
             <strong>Oyuncu 1:</strong> ${data.answer}
         </div>`;
 
-    document.getElementById("questionInput").value = "";
-    document.getElementById("questionInput").disabled = false;
+    document.getElementById("questionInput").value =
+        "";
 
-    document.getElementById("askQuestion").disabled = false;
+    document.getElementById("questionInput").disabled =
+        false;
 
-    document.getElementById("yesButton").disabled = false;
-    document.getElementById("noButton").disabled = false;
+    document.getElementById("askQuestion").disabled =
+        false;
 
     if (questionCount >= 15) {
 
@@ -573,10 +604,14 @@ socket.on("questionTimedOut", data => {
             ⏰ Süre doldu! Bu soru cevaplanmadı.
         </div>`;
 
-    document.getElementById("questionInput").value = "";
-    document.getElementById("questionInput").disabled = false;
+    document.getElementById("questionInput").value =
+        "";
 
-    document.getElementById("askQuestion").disabled = false;
+    document.getElementById("questionInput").disabled =
+        false;
+
+    document.getElementById("askQuestion").disabled =
+        false;
 
     if (questionCount >= 15) {
 
@@ -666,7 +701,6 @@ document
     });
 
 
-// OYUN BAŞLADIĞINDA TAHMİN LİSTESİ
 renderGuessList();
 
 
@@ -686,12 +720,29 @@ document
             return;
         }
 
+        document.getElementById("guessButton").disabled =
+            true;
+
         socket.emit("makeGuess", {
             roomCode,
             player: selectedGuess
         });
 
     });
+
+
+// =====================================================
+// TAHMİN HATASI
+// =====================================================
+
+socket.on("guessError", message => {
+
+    document.getElementById("guessButton").disabled =
+        false;
+
+    alert("❌ " + message);
+
+});
 
 
 // =====================================================
@@ -872,6 +923,8 @@ socket.on("newRound", data => {
     guessCount = 0;
     hintsUsed = 0;
 
+    answerLocked = false;
+
     player1Score = data.player1Score;
     player2Score = data.player2Score;
 
@@ -881,18 +934,32 @@ socket.on("newRound", data => {
 
         document.getElementById("playerSearch").value = "";
 
-        document.getElementById("selectedPlayer").innerHTML = "";
+        document.getElementById("selectedPlayer").innerHTML =
+            "";
 
         document.getElementById("confirmPlayer").disabled =
             true;
 
         renderPlayerList();
 
+        myRole = "player1";
+
         showScreen("selectPlayer");
 
     } else {
 
+        myRole = "player2";
+
         renderGuessList();
+
+        document.getElementById("questionInput").value =
+            "";
+
+        document.getElementById("questionInput").disabled =
+            false;
+
+        document.getElementById("askQuestion").disabled =
+            false;
 
         showScreen("questionScreen");
 
@@ -920,6 +987,8 @@ document
 
 socket.on("gameReset", () => {
 
+    stopTimer();
+
     player1Score = 0;
     player2Score = 0;
 
@@ -927,6 +996,8 @@ socket.on("gameReset", () => {
 
     selectedPlayer = null;
     selectedGuess = null;
+
+    answerLocked = false;
 
     showScreen("menu");
 
@@ -990,13 +1061,18 @@ document
 
 socket.on("connect", () => {
 
-    console.log("🟢 Server bağlantısı başarılı.");
+    console.log(
+        "🟢 Server bağlantısı başarılı."
+    );
 
 });
 
+
 socket.on("disconnect", () => {
 
-    console.log("🔴 Server bağlantısı kesildi.");
+    console.log(
+        "🔴 Server bağlantısı kesildi."
+    );
 
 });
 
@@ -1013,6 +1089,8 @@ function resetRound() {
     questionCount = 0;
     guessCount = 0;
     hintsUsed = 0;
+
+    answerLocked = false;
 
     stopTimer();
 
